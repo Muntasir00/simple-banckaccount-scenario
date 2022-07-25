@@ -6,7 +6,8 @@ from Account import serializers
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .serializers import AccountSerializer,transferSerializer
-
+from django.contrib import messages
+from rest_framework import status
 
 
 # Create your views here.
@@ -31,6 +32,7 @@ def create(request):
 
     b = Account(username=name, balance=n)
     b.save()
+    messages.success(request,"Account created successfully")
     accounts = Account.objects.all()
     return render(request,'home.html',{'accounts':accounts})
 
@@ -47,6 +49,7 @@ def transfer(request):
     to_account.balance = to_account.balance + transfer_amount
     from_account.save()
     to_account.save()
+    messages.success(request,"Balance Transferred successfully")
     accounts = Account.objects.all()
     return render(request,'home.html',{'accounts':accounts})
 
@@ -98,10 +101,12 @@ def AccountCreate(request):
     serializer = AccountSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     # b = Account(username=name, balance=n)
     # b.save()
 
-    return Response(serializer.data)
+   
 
 @api_view(['POST'])
 def transfer_api(request):
@@ -117,7 +122,9 @@ def transfer_api(request):
         to_account.balance = to_account.balance + transfer_amount
         from_account.save()
         to_account.save()
+        return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     # accounts = Account.objects.all()
     # return JsonResponse(request, accounts)
 
-    return Response(serializer.data)
+ 

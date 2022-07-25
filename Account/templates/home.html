@@ -41,13 +41,30 @@ h1{
 }
 .button3 {background-color: #f44336;}
 .button4 {background-color: #137abe;}
+.success-msg {
+  color: #270;
+  background-color: #DFF2BF;
+  font-size: large;
+  font-weight: 300;
+  margin: 2px;
+  padding: auto;
+}
 </style>
 </head>
 <body>
-
+<section>
 <h1>User Account Details</h1>
 <a href="{% url 'create' %}"><button class="button button3">Create Account</button></a>
+<br>
+<div class="col-md-10">
+  <div class="success-msg">
+    
+    {% for msg in messages %}
+    {{ msg }}
+    {% endfor %}
+  </div>
 
+</div>
 
 <table id="customers">
   <tr>
@@ -79,6 +96,7 @@ h1{
 
 
 </table>
+</section>
 
 </body>
 </html>
