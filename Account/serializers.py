@@ -7,7 +7,13 @@ class AccountSerializer(serializers.ModelSerializer):
         model = Account
         fields = '__all__' 
 
-class AccountCreateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Account
-        fields = ['username','balance']
+class transferSerializer(serializers.Serializer):
+    from_account = serializers.IntegerField()
+    to_account = serializers.IntegerField()
+    balance = serializers.IntegerField()
+    # class Meta:
+    #     model = Account
+    #     fields = fields = ('__all__')
+
+
+

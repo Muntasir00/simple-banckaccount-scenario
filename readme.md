@@ -1,4 +1,4 @@
-1.Clone the git repo using this -  git clone 
+1.Clone the git repo using this -  git clone https://github.com/Muntasir00/simple-banckaccount-scenario.git
 2.Run pip install -r requirements.txt
 3.configure settings.py file for postgres database,
 DATABASES = {
