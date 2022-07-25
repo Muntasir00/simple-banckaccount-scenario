@@ -73,13 +73,13 @@ def transfer(request):
 def accountlist(request):
     accounts = Account.objects.all()
     serializer = AccountSerializer(accounts, many=True)
-    return Response(serializer.data)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 def AccountDetail(request, pk):
     account = Account.objects.get(id=pk)
     serializer = AccountSerializer(account,many=False)
-    return Response(serializer.data)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 def AccountCreate(request):
