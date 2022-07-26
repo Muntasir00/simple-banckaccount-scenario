@@ -5,7 +5,7 @@ import random
 from Account import serializers
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .serializers import AccountSerializer,transferSerializer
+from .serializers import AccountSerializer,transferSerializer,AccountUpdateSerializer
 from django.contrib import messages
 from rest_framework import status
 
@@ -126,5 +126,16 @@ def transfer_api(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     # accounts = Account.objects.all()
     # return JsonResponse(request, accounts)
+
+@api_view(['PUT'])
+def Update_account(request):
+    serializer = AccountUpdateSerializer(data=request.data)
+    if serializer.is_valid():
+        account= Account.objects.get(id=serializer.data["id"])
+        account.username = serializer.data["username"]
+        account.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
  

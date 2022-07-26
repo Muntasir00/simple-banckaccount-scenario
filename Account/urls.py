@@ -10,6 +10,7 @@ urlpatterns = [
     path('account_list/',views.accountlist, name='account_list'),
     path('account_detail/<str:pk>/',views.AccountDetail, name='account_detail'),
     path('account_create/',views.AccountCreate, name='account_create'),
+    path('Update_account/',views.Update_account,name='Update_account'),
 
     
     

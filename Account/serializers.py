@@ -15,5 +15,9 @@ class transferSerializer(serializers.Serializer):
     #     model = Account
     #     fields = fields = ('__all__')
 
+class AccountUpdateSerializer(serializers.Serializer):
+    id =serializers.IntegerField()
+    username = serializers.CharField(max_length=30)
+
 
 
