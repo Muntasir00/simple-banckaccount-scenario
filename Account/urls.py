@@ -4,6 +4,7 @@ from .import views
 urlpatterns = [
     path('', views.home , name='home'),
     path('create/', views.create , name='create'),
+    path('hold/', views.Hold , name='hold'),
     #path('create_api/', views.create_api , name='create_api'),
     path('transfer/',views.transfer , name='transfer'),
     path('transfer_api/',views.transfer_api, name='transfer_api'),

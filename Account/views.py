@@ -8,12 +8,22 @@ from rest_framework.response import Response
 from .serializers import AccountSerializer,transferSerializer,AccountUpdateSerializer
 from django.contrib import messages
 from rest_framework import status
+from django.shortcuts import get_object_or_404
 
 
 # Create your views here.
 def home(request):
     accounts = Account.objects.all()
     return render(request,'home.html',{'accounts':accounts})
+
+def Hold(request):
+    account = get_object_or_404(Account,pk=request.GET.get('account_id'))
+    account.hold = not account.hold
+    account.save()
+    accounts = Account.objects.all()
+    return render(request,'home.html',{'accounts':accounts})
+
+    
 
 def create(request):
     n=random.randint(50,500)
@@ -45,13 +55,19 @@ def transfer(request):
     from_account = Account.objects.get(id=from_account_id)
     to_account = Account.objects.get(id=to_account_id)
 
-    from_account.balance = from_account.balance - transfer_amount
-    to_account.balance = to_account.balance + transfer_amount
-    from_account.save()
-    to_account.save()
-    messages.success(request,"Balance Transferred successfully")
-    accounts = Account.objects.all()
-    return render(request,'home.html',{'accounts':accounts})
+    if(from_account.hold is False):
+        from_account.balance = from_account.balance - transfer_amount
+        to_account.balance = to_account.balance + transfer_amount
+        from_account.save()
+        to_account.save()
+        messages.success(request,"Balance Transferred successfully")
+        accounts = Account.objects.all()
+        return render(request,'home.html',{'accounts':accounts})
+    else:
+        messages.error(request,"The account is in hold status")
+        accounts = Account.objects.all()
+        return render(request,'home.html',{'accounts':accounts})
+
 
 
 # def transfer_api(request):
@@ -117,12 +133,14 @@ def transfer_api(request):
         from_account = Account.objects.get(id=serializer.data["from_account"])
         to_account = Account.objects.get(id=serializer.data["to_account"])
         transfer_amount = int(serializer.data["balance"])
-
-        from_account.balance = from_account.balance - transfer_amount
-        to_account.balance = to_account.balance + transfer_amount
-        from_account.save()
-        to_account.save()
-        return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+        if(from_account.hold is False):
+            from_account.balance = from_account.balance - transfer_amount
+            to_account.balance = to_account.balance + transfer_amount
+            from_account.save()
+            to_account.save()
+            return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+        else:
+            return Response(serializer.data, status=status.HTTP_406_NOT_ACCEPTABLE)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     # accounts = Account.objects.all()
     # return JsonResponse(request, accounts)
